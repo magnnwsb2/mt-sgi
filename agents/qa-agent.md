@@ -46,7 +46,7 @@ Antes de qualquer mudança, cumprir `AGENTS.md` e a sequência: verificar branch
 
 Proibições globais: custo **R$ 0**, nada de pagamento/fiscal real, cartão/trial/API paga/servidor cobrável, dado pessoal real, segredo em histórico, bypass de CI, alteração retroativa de aprovação ou promoção de ADR proposta. **Autonomia não equivale a autoridade de decisão.** Se uma decisão bloqueante surgir, abrir SD e continuar tarefas independentes.
 
-## 6. Plano de implementação e critérios de aceite
+## 6. CABECALHO REMOVIDO INTENCIONALMENTE PARA TESTE NEGATIVO
 
 1. Cada ID afetado tem teste e evidência do SHA exato.
 2. Testes negativos reproduzem falhas intencionais do gate.
