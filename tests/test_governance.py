@@ -12,6 +12,7 @@ from scripts.validate_governance import (
     find_secret_patterns,
     validate_agent_docs,
     validate_core_documents,
+    validate_decision_states,
     validate_repository,
     validate_workflow_policy,
 )
@@ -98,7 +99,7 @@ class GovernanceTests(unittest.TestCase):
             ("persist-credentials: false", "persist-credentials: true"),
             ("actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
              "actions/checkout@v4"),
-            ("    runs-on: ubuntu-latest", "    permissions:\\n      contents: write\\n    runs-on: ubuntu-latest"),
+            ("    runs-on: ubuntu-latest", "    permissions:\n      contents: write\n    runs-on: ubuntu-latest"),
             ("python3 scripts/validate_governance.py", "echo skipped-validator"),
             ("python3 -m unittest", "echo skipped-tests"),
         )
@@ -138,6 +139,34 @@ class GovernanceTests(unittest.TestCase):
             )
             self.assertTrue(any("Inventário SDD-004" in e
                                 for e in validate_core_documents(root)))
+
+    def test_current_normative_states_are_consistent(self) -> None:
+        self.assertEqual(validate_decision_states(ROOT), [])
+
+    def test_normative_state_promotions_without_decision_are_blocked(self) -> None:
+        cases = (
+            ("docs/adr/ADR-001-arquitetura-modular-extracao-progressiva.md",
+             "**ACEITA — APROVADA", "**PROPOSTA — NÃO ACEITA"),
+            ("docs/adr/ADR-002-consistencia-venda-estoque-caixa.md",
+             "**PROPOSTA — NÃO ACEITA", "**ACEITA"),
+            ("docs/adr/ADR-006-agentes-autonomia-merge.md",
+             "**ACEITA", "**PROPOSTA"),
+            ("docs/specs/SDD-004-agentes-autonomia.md",
+             "**APROVADO: governança operacional",
+             "**PROPOSTO: governança operacional"),
+            ("docs/specs/SDD-001.md",
+             "**EM REVISÃO", "**APROVADO"),
+        )
+        for relative, old, new in cases:
+            with self.subTest(document=relative):
+                with tempfile.TemporaryDirectory() as d:
+                    root = Path(d)
+                    original = (ROOT / relative).read_text(encoding="utf-8")
+                    self.assertIn(old, original)
+                    dest = root / relative
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    dest.write_text(original.replace(old, new, 1), encoding="utf-8")
+                    self.assertTrue(any(relative in e for e in validate_decision_states(root)))
 
     def test_no_dependency_on_paid_services(self) -> None:
         doc = (ROOT / "docs/specs/SDD-004-agentes-autonomia.md").read_text(encoding="utf-8")
