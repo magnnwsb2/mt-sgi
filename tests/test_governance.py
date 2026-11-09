@@ -134,7 +134,7 @@ class GovernanceTests(unittest.TestCase):
             shutil.copy(ROOT / "agents/README.md", root / "agents/README.md")
             source = (ROOT / "docs/specs/SDD-004-agentes-autonomia.md").read_text(encoding="utf-8")
             (root / "docs/specs/SDD-004-agentes-autonomia.md").write_text(
-                source.replace("AGT-015", "AGT-999", 1), encoding="utf-8"
+                source.replace("`agents/merge-guardian.md`", "`agents/unregistered-guardian.md`", 1), encoding="utf-8"
             )
             self.assertTrue(any("Inventário SDD-004" in e
                                 for e in validate_core_documents(root)))
