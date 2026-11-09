@@ -104,7 +104,7 @@ def validate_agent_docs(root: Path) -> list[str]:
         except (UnicodeError, OSError) as exc:
             errors.append(f"Não foi possível ler agents/{name}: {type(exc).__name__}")
             continue
-        headings = re.findall(r"^# (AGT-\\d{3}) —", content, re.MULTILINE)
+        headings = re.findall(r"^# (AGT-\d{3}) —", content, re.MULTILINE)
         if headings != [expected_id]:
             errors.append(f"ID inválido ou duplicado no título de agents/{name}; esperado {expected_id}")
         elif headings[0] in ids:
@@ -192,7 +192,7 @@ def validate_workflow_policy(root: Path) -> list[str]:
     workflow = path.read_text(encoding="utf-8")
     if "pull_request_target" in workflow:
         errors.append("Workflow de governança não pode utilizar pull_request_target.")
-    if re.search(r"(?m)^\\s*contents:\\s*write\\s*$", workflow):
+    if re.search(r"(?m)^\s*contents:\s*write\s*$", workflow):
         errors.append("Workflow de governança não pode conceder contents: write.")
     if "scripts/validate_governance.py" not in workflow or "unittest" not in workflow:
         errors.append("Workflow não executa validador e testes de regressão.")
