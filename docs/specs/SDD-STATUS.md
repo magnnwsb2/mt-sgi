@@ -183,3 +183,13 @@ Sugestão técnica submetida à decisão: transação única PostgreSQL ACID den
 - **Próxima ação documental:** revisar consistência/links/CI do PR #6 e registrar SHA exato da validação. Resultados no head do PR #2 não são automaticamente herdados para este PR.
 - **Próxima ação de produto:** apresentar ao responsável as escolhas abertas nas SDs, agrupadas no modelo híbrido. Não considerar `vamos continuar` como resposta aprovativa às decisões D1.
 - **Gate de integração:** continua bloqueado por `main.protected=false`, required checks desativados e `allow_auto_merge=false` segundo última consulta; reconsultar dados antes de qualquer merge. Custo adicional R$ 0.
+
+## 14. Revisão do pacote de propostas — PR #6 (09/11/2026)
+
+- [PR #6](https://github.com/magnnwsb2/mt-sgi/pull/6) aberto contra `feat/agent-governance-foundation` (PR #2); sem integração com `main`, nenhum merge efetuado.
+- Diff inicial revisado: **9 arquivos** (ADRs 003/004/005; SD-0002/0003/0004/0005; Decision Log e SDD-STATUS). **Nenhum backend, UI, workflow, migração ou API comercial** adicionado por este pacote.
+- Inventário da árvore da branch: ADR-003/004/005 e quatro SDs presentes. **12 links Markdown relativos incluídos no diff foram checados** contra caminhos presentes na árvore, sem destino inexistente encontrado.
+- Verificação CI de referência **anterior às correções de redação/registro finais**: commit `07cf40233604627dca826819cb92aa83a1baea99`, [run #42660749592](https://github.com/magnnwsb2/mt-sgi/actions/runs/42660749592), job `governance-validation` **SUCCESS**, Python 3.14.4, `MT SGI GOVERNANCE: PASS — 15 perfis`, `Ran 21 tests`, `OK`.
+- As decisões ADR-003, ADR-004 e ADR-005 permanecem **PROPOSTAS — NÃO ACEITAS**. ADR-002 permanece **PROPOSTA**. SD-0002 a SD-0005 permanecem **PENDENTES**. ADR-001/006 e a aprovação específica de SDD-004 foram preservadas. Aprovação de propostas de documentos por review **não** é aprovação de política de negócio.
+- O guardião de merge continua **BLOQUEADO** por Issue #3 (proteção `main`, required checks, revisão independente e auto-merge não comprovados); PR #6 tem dependência estrutural do PR #2. Validar CI do **head mais recente** após este registro; o run acima não prova commits posteriores.
+- Próxima ação: revisar propostas com o responsável em decisões agrupadas quando necessário; registro expresso antes de implementar. Custo financeiro adicional R$ 0.
