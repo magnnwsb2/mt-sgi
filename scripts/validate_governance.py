@@ -159,11 +159,12 @@ def validate_core_documents(root: Path) -> list[str]:
     spec = root / "docs/specs/SDD-004-agentes-autonomia.md"
     if spec.is_file():
         spec_text = spec.read_text(encoding="utf-8")
-        spec_entries = dict(re.findall(
-            r"\|\s*(AGT-\d{3})\s*\|[^\n]*?`(agents/[^\x60]+\.md)`\s*\|",
+        # SDD-004 lista Papel | Arquivo | Responsabilidade, sem coluna AGT-ID.
+        spec_entries = re.findall(
+            r"(?m)^\|[^\n|]+\|\s*`(agents/[^\x60]+\.md)`\s*\|",
             spec_text,
-        ))
-        expected_entries = {agent_id: f"agents/{name}" for name, agent_id in AGENTS.items()}
+        )
+        expected_entries = [f"agents/{name}" for name in AGENTS]
         if spec_entries != expected_entries:
             errors.append("Inventário SDD-004 diverge dos 15 perfis canônicos.")
     if manifest_path.is_file():
