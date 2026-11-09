@@ -2,7 +2,7 @@
 
 **Plataforma de gestão comercial e ponto de venda (PDV)** para comércio geral, construída sob **Spec-Driven Development (SDD)**, arquitetura modular e compromisso de **custo financeiro zero** na fase de desenvolvimento e demonstração.
 
-> **Estado atual:** fundação de documentação em revisão. **Não há aplicação, API, banco migrado, workflow de CI ou PDV implementado.** Nenhuma funcionalidade foi validada. A decisão de arquitetura ADR-001 já foi aprovada; a ADR-002 é apenas uma proposta.
+> **Estado atual (09/11/2026):** fundação SDD e governança em revisão no [PR #2](https://github.com/magnnwsb2/mt-sgi/pull/2), ainda não mesclado à `main`. **O workflow de CI da governança existe e executou 14 testes com sucesso no commit `ce2d3237cb7e8a77c102c78c507e564339952e9a`** ([evidência](https://github.com/magnnwsb2/mt-sgi/actions/runs/42572182538)); isso não comprova proteção da `main`. **Não há aplicação comercial, API, banco migrado ou PDV implementados, nem funcionalidades de negócio validadas.** ADR-001 aceita; ADR-002 proposta; stack de produto pendente.
 
 ## Fonte única da verdade
 
@@ -12,9 +12,11 @@ O projeto **não depende de contexto de conversas do ChatGPT**. Qualquer pessoa 
 2. [SDD-001 — Especificação Mestra](docs/specs/SDD-001.md) — autoridade normativa, escopo, arquitetura, prioridades e aceites.
 3. [SDD-002 — Domínios, Regras, Contratos e Dados](docs/specs/SDD-002-dominios-contratos.md).
 4. [SDD-003 — Tecnologias, Operação, Segurança e Qualidade](docs/specs/SDD-003-tecnologias-operacao.md).
-5. [SDD-STATUS — Estado real e Handoff](docs/specs/SDD-STATUS.md).
-6. [ADR-001 — Monólito modular e extração progressiva (ACEITA)](docs/adr/ADR-001-arquitetura-modular-extracao-progressiva.md).
-7. [ADR-002 — Consistência de venda/estoque/caixa (PROPOSTA)](docs/adr/ADR-002-consistencia-venda-estoque-caixa.md).
+5. [SDD-004 — Governança operacional dos agentes (APROVADA)](docs/specs/SDD-004-agentes-autonomia.md).
+6. [SDD-STATUS — Estado real e Handoff](docs/specs/SDD-STATUS.md).
+7. [ADR-001 — Monólito modular e extração progressiva (ACEITA)](docs/adr/ADR-001-arquitetura-modular-extracao-progressiva.md).
+8. [ADR-002 — Consistência de venda/estoque/caixa (PROPOSTA)]
+9. [ADR-006 — Governança e merge condicionado (ACEITA)](docs/adr/ADR-006-agentes-autonomia-merge.md).(docs/adr/ADR-002-consistencia-venda-estoque-caixa.md).
 
 **Regra:** propostas não são decisões aprovadas; documentação não prova implementação; PR aberto não significa que o conteúdo já integra `main`. Havendo divergência, seguir a constituição documental do SDD-001 e registrar o conflito.
 
