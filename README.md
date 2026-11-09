@@ -50,3 +50,16 @@ Copie esta instrução para uma nova conversa:
 ## Licença
 
 [MIT](LICENSE). O licenciamento do projeto não substitui análise das licenças de dependências futuras.
+
+## Agentes de engenharia — fundação em desenvolvimento
+
+O repositório adota governança de **15 papéis de agentes**, com SDD como fonte normativa, execução por sessões do ChatGPT conectado ao GitHub e autorização operacional controlada. Arquivos de agentes não são processos persistentes ou IAs paralelas.
+
+- [SDD-004 — governança de agentes](docs/specs/SDD-004-agentes-autonomia.md)
+- [Inventário dos 15 perfis](agents/README.md)
+- [ADR-006 — ChatGPT/GitHub e merge protegido](docs/adr/ADR-006-agentes-autonomia-merge.md)
+- [Runbook de execução](docs/agents/RUNBOOK.md)
+- [Protocolo do Merge Guardian](docs/operations/MERGE-GUARDIAN.md)
+- [Decision Log e aprovações](docs/decisions/DECISION-LOG.md)
+
+**Atenção:** criação de arquivos, CI e ativação real de auto-merge são marcos separados. Consulte SDD-STATUS e os checks/PRs do GitHub antes de afirmar implementação ou aprovação.

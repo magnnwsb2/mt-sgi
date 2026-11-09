@@ -11,7 +11,7 @@
 
 1. Verificar `git status`, branch, `git log -1` e PR/CI aplicáveis. Se apenas navegador/connector estiver disponível, consultar o mesmo estado via GitHub.
 2. Ler `docs/specs/SDD-001.md` **integralmente**.
-3. Ler os anexos registrados em SDD-001: `docs/specs/SDD-002-dominios-contratos.md`, `docs/specs/SDD-003-tecnologias-operacao.md` e `docs/specs/SDD-STATUS.md`.
+3. Ler os anexos registrados em SDD-001: `docs/specs/SDD-002-dominios-contratos.md`, `docs/specs/SDD-003-tecnologias-operacao.md`, **`docs/specs/SDD-004-agentes-autonomia.md`** e `docs/specs/SDD-STATUS.md`.
 4. Ler ADR-001 e ADRs específicas da tarefa. **ADR-002 é PROPOSTA até aprovação expressa**, não norma implementável.
 5. Inspecionar arquivos realmente existentes e evidências de testes reais; não assumir que roadmap significa feature implementada.
 6. Identificar quais requisitos IDs, domínios, decisões, contratos e testes serão afetados.
@@ -82,3 +82,17 @@ Evitar alterações diretas em `main` quando revisão por PR for possível. Não
 - [ ] Descrevi ao responsável qualquer aprovação necessária para o avanço.
 
 **Mensagem curta para reinício de contexto:** “Abra o GitHub magnnwsb2/mt-sgi, leia AGENTS.md e todo o SDD (001/002/003/STATUS), depois ADRs; verifique CI, PRs e estado real; continue somente a próxima etapa autorizada. Nada pago, nada fora do SDD.”
+
+## 7. Fundação de agentes autorizada e limites atuais
+
+**Autorização mestra concedida pelo responsável em 08/11/2026**, exclusivamente para governança e trabalho operacional especificado (SDD-004, ADR-006 ACEITA, `docs/decisions/DECISION-LOG.md`). A autorização **não aceita** a ADR-002 nem a baseline SDD-002/003 de negócio e não remove a obrigação de decisões D1.
+
+- **15 perfis:** `agents/README.md` apresenta o inventário; ler `agents/<perfil>.md` da tarefa.
+- **Executor selecionado:** ChatGPT + GitHub conectado. Não supor agentes em background ou paralelos permanentes; GitHub Actions executa somente checks determinísticos.
+- **Autonomia:** avançar sem confirmação extra por operações A0/A1/A2; A3 merge depende de controles nativos e revisão real. Máximo três correções por causa.
+- **Solicitações de decisão:** `docs/decisions/requests/SD-TEMPLATE.md` e modelo híbrido; registrar aprovação expressa e seu escopo antes de atuar.
+- **Merge Guardian:** `docs/operations/MERGE-GUARDIAN.md` — fail-closed, não fazer merge por atalho quando automerge/protections/checks ausentes.
+- **Tarefas:** `docs/agents/TASK-CONTRACT.md`; execução e retomada `docs/agents/RUNBOOK.md`.
+- **Especificação:** `docs/specs/SDD-004-agentes-autonomia.md` é a decisão operacional; `docs/adr/ADR-006-agentes-autonomia-merge.md` é ACEITA. Nenhuma autorização implica aprovação da ADR-002.
+
+**Estado de validação nunca é herdado do nome do arquivo:** diferenciar papéis criados, CI executada e auto-merge realmente instalado.
