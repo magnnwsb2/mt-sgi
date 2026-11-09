@@ -43,6 +43,13 @@
 
 Esses SHAs identificam **commits iniciais de cada arquivo** na branch, não SHA do conteúdo atual nem aprovação de merge. O commit da branch e o estado do PR devem ser consultados no GitHub a cada reinício.
 
+### 2.1 Verificação documental efetuada nesta preparação
+
+- Conferidos diretamente na branch os **oito arquivos alterados** do PR #1 e a presença de seus conteúdos; total de aproximadamente **1.581 linhas de Markdown** (contagem sujeita a futuras revisões).
+- Conferidas as referências internas do README para AGENTS, SDD, STATUS e ADRs; a licença MIT referenciada já existe na branch `main`.
+- Conferido que ADR-001 está marcada ACEITA e ADR-002 está marcada PROPOSTA; não foi executado teste de aplicação, contrato, desempenho ou scanner de segurança.
+- Esta verificação é **estática/documental manual**, sem workflow automatizado de CI; seu resultado não pode ser rotulado como validação de software.
+
 ## 3. Decisões — matriz de autorização
 
 | ID | Item | Estado | Regras para continuar |
