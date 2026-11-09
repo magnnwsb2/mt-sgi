@@ -36,3 +36,16 @@ A autorização mestra permite fazer commits, branches, PRs, testes, documentaç
 Em instrução expressa de **09/11/2026**, o responsável reafirmou a autorização mestra para a implementação operacional do MT SGI no ambiente **ChatGPT + GitHub**, com autonomia A0/A1/A2 e A3 estritamente condicionado às proteções reais, sem necessidade de nova aprovação para cada tarefa, correção, commit ou PR. Os limites de custo **R$ 0**, dados sintéticos, decisões D1 pendentes, segurança fail-closed e ausência de execução permanente fora da sessão permanecem inalterados.
 
 As entradas GOV-DEC-001 a GOV-DEC-010 registram historicamente **08/11/2026**, conforme a documentação original. Esta ratificação em 09/11 não altera retroativamente datas anteriores, não aprova ADR-002/003/004/005 nem a baseline de tecnologia/negócio e não substitui revisão independente no GitHub.
+
+## Solicitações em aberto — propostas sem aprovação (09/11/2026)
+
+Abaixo constam **solicitações**, não decisões tomadas. Registradas na branch de propostas do [PR #6](https://github.com/magnnwsb2/mt-sgi/pull/6), empilhada sobre PR #2. A existência do documento não muda o estado normativo de nenhuma ADR.
+
+| SD | ADR vinculada | Estado | Tema principal |
+|---|---|---|---|
+| [SD-0002](requests/SD-0002-checkout-consistencia.md) | ADR-002 **PROPOSTA** | **PENDENTE** | checkout, estoque, idempotência e caixa simulados |
+| [SD-0003](requests/SD-0003-ambiente-custo-zero.md) | ADR-003 **PROPOSTA** | **PENDENTE** | demo local, CI efêmera e custo zero |
+| [SD-0004](requests/SD-0004-unidades-custeio.md) | ADR-004 **PROPOSTA** | **PENDENTE** | unidade, conversão, custos/CMV e arredondamento |
+| [SD-0005](requests/SD-0005-interfaces-sessao.md) | ADR-005 **PROPOSTA** | **PENDENTE** | Admin/PDV, IAM, sessão e RBAC |
+
+**Bloqueadores globais adicionais:** aprovação formal da baseline SDD-001/002/003 e escolha de stack ainda não concedidas. As decisões GOV-DEC-001 a GOV-DEC-010 e a ratificação operacional em 09/11/2026 continuam vigentes somente dentro de seus limites. O registro de SD pendente **não substitui** resposta inequívoca do responsável, referência à autorização e atualização dos documentos afetados.
