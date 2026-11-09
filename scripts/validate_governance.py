@@ -178,6 +178,45 @@ def validate_core_documents(root: Path) -> list[str]:
     return errors
 
 
+def validate_decision_states(root: Path) -> list[str]:
+    """Protege estados explícitos da baseline atual; não aprova decisões por conta própria.
+
+    Se o responsável aprovar outra baseline, especificação e expectativa deste
+    gate devem mudar juntas em PR auditável, jamais silenciosamente.
+    """
+    expected = {
+        "docs/adr/ADR-001-arquitetura-modular-extracao-progressiva.md": (
+            "Estado da decisão", "ACEITA — APROVADA",
+        ),
+        "docs/adr/ADR-002-consistencia-venda-estoque-caixa.md": (
+            "Estado", "PROPOSTA — NÃO ACEITA",
+        ),
+        "docs/adr/ADR-006-agentes-autonomia-merge.md": (
+            "Estado", "ACEITA",
+        ),
+        "docs/specs/SDD-004-agentes-autonomia.md": (
+            "Estado", "APROVADO: governança operacional",
+        ),
+        "docs/specs/SDD-001.md": (
+            "Estado da especificação global", "EM REVISÃO",
+        ),
+    }
+    errors: list[str] = []
+    for relative, (key, value) in expected.items():
+        try:
+            content = read_text(root, relative)
+        except (OSError, UnicodeError):
+            continue  # validate_core_documents já impede arquivo ausente.
+        # Ancorar na linha de estado; palavras em outras seções não legitimam promoção.
+        row = re.search(
+            rf"(?m)^\|[ \t]*{re.escape(key)}[ \t]*\|[ \t]*\*\*([^\n|]+)",
+            content,
+        )
+        if not row or not row.group(1).startswith(value):
+            errors.append(f"Estado normativo inesperado em {relative}: requer decisão registrada.")
+    return errors
+
+
 def iter_repo_text(root: Path) -> Iterable[tuple[str, str]]:
     for path in root.rglob("*"):
         if not path.is_file() or path.is_symlink():
@@ -231,6 +270,7 @@ def validate_repository(root: Path = ROOT) -> list[str]:
     failures: list[str] = []
     failures.extend(validate_agent_docs(root))
     failures.extend(validate_core_documents(root))
+    failures.extend(validate_decision_states(root))
     failures.extend(validate_workflow_policy(root))
     try:
         failures.extend(validate_secrets(root))
