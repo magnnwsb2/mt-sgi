@@ -155,6 +155,25 @@ def validate_core_documents(root: Path) -> list[str]:
         for name in AGENTS:
             if f"({name})" not in manifest:
                 errors.append(f"Manifesto omite agente: {name}")
+    # Conferência cruzada: inventário normativo, manifesto e mapa de validação.
+    spec = root / "docs/specs/SDD-004-agentes-autonomia.md"
+    if spec.is_file():
+        spec_text = spec.read_text(encoding="utf-8")
+        spec_entries = dict(re.findall(
+            r"\|\s*(AGT-\d{3})\s*\|[^\n]*?`(agents/[^\x60]+\.md)`\s*\|",
+            spec_text,
+        ))
+        expected_entries = {agent_id: f"agents/{name}" for name, agent_id in AGENTS.items()}
+        if spec_entries != expected_entries:
+            errors.append("Inventário SDD-004 diverge dos 15 perfis canônicos.")
+    if manifest_path.is_file():
+        manifest_entries = dict(re.findall(
+            r"\|\s*(AGT-\d{3})\s*\|\s*\[[^]]+\]\(([^)]+\.md)\)",
+            manifest,
+        ))
+        expected_manifest = {agent_id: name for name, agent_id in AGENTS.items()}
+        if manifest_entries != expected_manifest:
+            errors.append("Inventário agents/README.md diverge dos 15 perfis canônicos.")
     return errors
 
 
@@ -192,8 +211,16 @@ def validate_workflow_policy(root: Path) -> list[str]:
     workflow = path.read_text(encoding="utf-8")
     if "pull_request_target" in workflow:
         errors.append("Workflow de governança não pode utilizar pull_request_target.")
-    if re.search(r"(?m)^\s*contents:\s*write\s*$", workflow):
-        errors.append("Workflow de governança não pode conceder contents: write.")
+    if re.search(r"(?m)^\s*(?:write-all|id-token:\s*write|contents:\s*write)\s*$", workflow):
+        errors.append("Workflow de governança contém permissão excessiva.")
+    if not re.search(r"(?m)^permissions:\s*\n\s+contents:\s*read\s*$", workflow):
+        errors.append("Workflow deve limitar permissões globais a contents: read.")
+    if re.search(r"(?m)^\s+permissions\s*:", workflow):
+        errors.append("Workflow não pode sobrescrever permissões no job.")
+    if not re.search(r"(?m)^\s+persist-credentials:\s*false\s*$", workflow):
+        errors.append("Checkout deve desabilitar persistência de credenciais.")
+    if not re.search(r"(?m)^\s+uses:\s*actions/checkout@[a-f0-9]{40}(?:\s|$)", workflow):
+        errors.append("Checkout deve usar SHA completo imutável.")
     if "scripts/validate_governance.py" not in workflow or "unittest" not in workflow:
         errors.append("Workflow não executa validador e testes de regressão.")
     return errors
