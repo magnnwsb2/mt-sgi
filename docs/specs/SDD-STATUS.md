@@ -130,3 +130,13 @@ Sugestão técnica submetida à decisão: transação única PostgreSQL ACID den
 **Conclusão estritamente limitada:** demonstrou-se que o gate determinístico aceita o estado documentado válido e rejeita a violação sintética. **Ainda não foi demonstrado** que a proteção remota impede um usuário admin de efetuar merge, que existe reviewer independente de identidade, ou que auto-merge está habilitado. Nenhuma dessas evidências pode ser inferida de um resultado PASS em Actions.
 
 **Bloqueio administrativo:** [Issue #3](https://github.com/magnnwsb2/mt-sgi/issues/3). Até a configuração da `main` ser concluída e confirmada, não fazer merge de #2 ou qualquer outra PR. A autorização mestra permanece válida para o trabalho operacional autorizado não bloqueado. SDD-002/003 e ADR-002 mantêm seus estados de proposta, sem implementação do domínio.
+
+## 10. Auditoria de retomada — 09/11/2026
+
+- Branch `feat/agent-governance-foundation`, PR #2 aberto contra `main`; consulta via GitHub conectado.
+- Inventário SDD-004: 15 perfis canônicos localizados e inspecionados; `agents/audit.md` era um perfil abreviado redundante, não canônico. Removido no commit `e4dfadb1b222d11c76ba7c20d0753d8f1b9d29bd`; `agents/audit-agent.md` preservado.
+- `docs/agents/AGENT-GOVERNANCE.md` permanece como documentação transversal, não como décimo sexto agente.
+- `allow_auto_merge=false` confirmado por metadados do repositório. Issue #3 aberta; proteção nativa da `main` ainda requer verificação/configuração administrativa. Merge Guardian: **BLOQUEADO**; nenhum merge executado.
+- CI: os 14 testes PASS e o teste negativo documentados são evidências históricas; **não foram reexecutados nem validados para o commit de remoção nesta sessão**. Checks do novo head: NÃO VERIFICADOS.
+- Decisões: ADR-001 e ADR-006 aceitas; SDD-004 aprovado apenas para governança; ADR-002 proposta; ADR-003/004/005 e baseline global pendentes. Nenhum módulo comercial implementado nesta retomada.
+- Próxima ação: conferir execução de CI no novo SHA, revisar diff do PR #2 e aplicar controles de proteção/required checks da `main` antes de qualquer merge. Custo adicional observado nesta tarefa: R$ 0.
