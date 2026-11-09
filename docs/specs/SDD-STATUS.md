@@ -166,3 +166,30 @@ Sugestão técnica submetida à decisão: transação única PostgreSQL ACID den
 - Cobertura, reprodução e limites registrados em `docs/agents/RUNBOOK.md` §7. O verificador inspeciona arquivos texto da árvore atual, não todo histórico Git, nem segredos em todas as formas, PII semântica, licenças/dependências futuras, política remota de GitHub ou revisão de terceiro.
 - **Integração:** PR #2 permanece sem merge. Issue #3 continua bloqueando: `main.protected=false`, required checks não configurados e `allow_auto_merge=false` na última consulta administrativa autorizada. Não afirmar que o gate verificou bloqueio remoto, nem tentar `merge_pull_request`.
 - **Próximo gate:** conferir o check do head final após os commits documentais; atualizar parecer MG com evidência do SHA final. A implementação de CI pode ser considerada validada na **branch de trabalho**, mas a entrega permanece pendente de integração protegida à `main`. Custo adicional R$ 0.
+
+## 13. Pacote de decisões futuras — 09/11/2026 (PR #6)
+
+**Escopo: estritamente propositivo, nenhum requisito de negócio liberado.** Para continuar a preparação do produto enquanto o merge do PR #2 permanece bloqueado pela Issue #3, foi criada a branch `docs/adr-003-005-decision-proposals` com [PR #6](https://github.com/magnnwsb2/mt-sgi/pull/6), **base `feat/agent-governance-foundation` (PR #2)**. O PR é empilhado porque o SDD de fundação ainda não existe em `main`; nenhum dos dois PRs foi mesclado. A ordem de integração futura precisa preservar as dependências e proteções.
+
+| Artefato | Estado | Conteúdo | Solicitação |
+|---|---|---|---|
+| `docs/adr/ADR-002-consistencia-venda-estoque-caixa.md` | **PROPOSTA original** | transação/idempotência/caixa | [SD-0002](../decisions/requests/SD-0002-checkout-consistencia.md) — **PENDENTE** |
+| `docs/adr/ADR-003-ambiente-demonstracao-custo-zero.md` | **PROPOSTA nova** | execução local, CI efêmera, R$ 0 sem SaaS | [SD-0003](../decisions/requests/SD-0003-ambiente-custo-zero.md) — **PENDENTE** |
+| `docs/adr/ADR-004-unidades-custeio-arredondamento.md` | **PROPOSTA nova** | conversões/custo/CMV/rounding | [SD-0004](../decisions/requests/SD-0004-unidades-custeio.md) — **PENDENTE** |
+| `docs/adr/ADR-005-interfaces-autenticacao-sessao.md` | **PROPOSTA nova** | Admin/PDV, sessão/IAM/RBAC | [SD-0005](../decisions/requests/SD-0005-interfaces-sessao.md) — **PENDENTE** |
+
+- São opções técnicas submetidas a uma decisão futura e **não** novas ADRs ACEITAS, aprovação da stack SDD-003 ou da baseline global SDD-001/002.
+- Sem código de aplicação, contratação, cartão, crédito/trial, dado real ou pagamento fiscal/bancário.
+- **Próxima ação documental:** revisar consistência/links/CI do PR #6 e registrar SHA exato da validação. Resultados no head do PR #2 não são automaticamente herdados para este PR.
+- **Próxima ação de produto:** apresentar ao responsável as escolhas abertas nas SDs, agrupadas no modelo híbrido. Não considerar `vamos continuar` como resposta aprovativa às decisões D1.
+- **Gate de integração:** continua bloqueado por `main.protected=false`, required checks desativados e `allow_auto_merge=false` segundo última consulta; reconsultar dados antes de qualquer merge. Custo adicional R$ 0.
+
+## 14. Revisão do pacote de propostas — PR #6 (09/11/2026)
+
+- [PR #6](https://github.com/magnnwsb2/mt-sgi/pull/6) aberto contra `feat/agent-governance-foundation` (PR #2); sem integração com `main`, nenhum merge efetuado.
+- Diff inicial revisado: **9 arquivos** (ADRs 003/004/005; SD-0002/0003/0004/0005; Decision Log e SDD-STATUS). **Nenhum backend, UI, workflow, migração ou API comercial** adicionado por este pacote.
+- Inventário da árvore da branch: ADR-003/004/005 e quatro SDs presentes. **12 links Markdown relativos incluídos no diff foram checados** contra caminhos presentes na árvore, sem destino inexistente encontrado.
+- Verificação CI de referência **anterior às correções de redação/registro finais**: commit `07cf40233604627dca826819cb92aa83a1baea99`, [run #42660749592](https://github.com/magnnwsb2/mt-sgi/actions/runs/42660749592), job `governance-validation` **SUCCESS**, Python 3.14.4, `MT SGI GOVERNANCE: PASS — 15 perfis`, `Ran 21 tests`, `OK`.
+- As decisões ADR-003, ADR-004 e ADR-005 permanecem **PROPOSTAS — NÃO ACEITAS**. ADR-002 permanece **PROPOSTA**. SD-0002 a SD-0005 permanecem **PENDENTES**. ADR-001/006 e a aprovação específica de SDD-004 foram preservadas. Aprovação de propostas de documentos por review **não** é aprovação de política de negócio.
+- O guardião de merge continua **BLOQUEADO** por Issue #3 (proteção `main`, required checks, revisão independente e auto-merge não comprovados); PR #6 tem dependência estrutural do PR #2. Validar CI do **head mais recente** após este registro; o run acima não prova commits posteriores.
+- Próxima ação: revisar propostas com o responsável em decisões agrupadas quando necessário; registro expresso antes de implementar. Custo financeiro adicional R$ 0.
