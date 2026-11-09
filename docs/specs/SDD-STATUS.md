@@ -8,8 +8,8 @@
 | Repositório | https://github.com/magnnwsb2/mt-sgi |
 | Branch documental de trabalho | `docs/sdd-fundacao-mt-sgi` (PR #1, base de proposta) |
 | Branch dos agentes | `feat/agent-governance-foundation` (derivada da branch documental) |
-| Pull Request dos agentes | **#2 — https://github.com/magnnwsb2/mt-sgi/pull/2 (DRAFT, base documental, NÃO MESCLADO)** |
-| Pull Request de revisão | **#1 — https://github.com/magnnwsb2/mt-sgi/pull/1 (DRAFT, ABERTO, NÃO MESCLADO)** |
+| Pull Request consolidado | **#2 — https://github.com/magnnwsb2/mt-sgi/pull/2 (BASE main, NÃO MESCLADO; aguardando proteção/automerge)** |
+| Pull Request documental anterior | **#1 — https://github.com/magnnwsb2/mt-sgi/pull/1 (FECHADO COMO SUBSTITUÍDO, SEM MERGE)** |
 | Branch de baseline | `main` — não pressupor que a documentação proposta já foi mesclada |
 | Release de software | **NENHUMA** |
 | Aplicação/API/DB/CI implementados | **NÃO** |
@@ -18,8 +18,8 @@
 | ADR-002 | **PROPOSTA**, aguardando escolha expressa |
 | SDD-004 / ADR-006 | **APROVADAS PARA GOVERNANÇA** (não para regras de negócio) |
 | Agentes versionados | **15 arquivos em agents/** na branch de feature; não são executores persistentes |
-| Gate de governança | **WORKFLOW E TESTES CODIFICADOS** na branch; resultados reais precisam de confirmação |
-| GitHub auto-merge | **DESABILITADO** no metadado do repositório consultado (allow_auto_merge=false) |
+| Gate de governança | **CI VALIDADA NO PR #2**: 14 testes PASS; run https://github.com/magnnwsb2/mt-sgi/actions/runs/42546296223 |
+| GitHub auto-merge | **DESABILITADO** (allow_auto_merge=false); main `protected=false`; impedimento Issue #3 |
 
 > Este arquivo registra **fatos verificáveis**, mas não transforma proposta em aprovação. Antes de agir, comparar com PRs, commits, árvore e workflows atuais no GitHub. Se estiver desatualizado, corrigir o status em PR sem reescrever retroativamente o histórico.
 
@@ -32,7 +32,7 @@
 - Foi criada a branch `docs/sdd-fundacao-mt-sgi` para apresentar documentação para revisão, **não** para implementar aplicação.
 - Nessa branch foram criados o SDD mestre, anexos de domínios/contratos e tecnologias/segurança/operação, ADR-001 adaptada à marca MT SGI, ADR-002 como proposta e AGENTS.md. O README inicial foi ampliado.
 - A proposta não introduz nenhuma API paga, hosting, checkout bancário real ou dados privados. **Nenhuma integração de execução foi testada, porque ainda não há código de aplicação.**
-- A documentação foi submetida no **PR #1 em estado DRAFT** para revisão. Seu conteúdo ainda não integra automaticamente `main`; o merge e aprovações de negócio são eventos distintos.
+- A documentação foi inicialmente submetida no PR #1 (histórico), depois integralmente consolidada no PR #2 contra `main`; o PR #1 foi **fechado sem merge como substituído**. Ainda não existe integração à `main`; merge e aprovação de negócio são eventos distintos.
 
 ## 2. Registro das entregas documentais
 
@@ -87,7 +87,7 @@ Esses SHAs identificam **commits iniciais de cada arquivo** na branch, não SHA 
 
 ## 6. Próxima ação segura — UM PASSO POR VEZ
 
-**Próxima ação imediata:** verificar os jobs e resultados do PR #2, corrigir falhas de governança, verificar configurações reais da main e registrar impedimentos para automerge. **Próxima decisão de negócio depois da fundação:** deliberar ADR-002 sem implementar vendas/estoque/caixa antecipadamente.
+**Próxima ação imediata (bloqueio externo identificado):** habilitar em GitHub UI a proteção real de `main`, checks obrigatórios e auto-merge, conforme Issue #3; então reavaliar PR #2 com o Merge Guardian. Enquanto isso, agentes podem desenvolver tarefas de governança independentes, mas **não podem mesclar**. **Próxima decisão de negócio:** deliberar ADR-002; não implementar vendas/estoque/caixa antecipadamente.
 
 Sugestão técnica submetida à decisão: transação única PostgreSQL ACID dentro do monólito modular, com UnitOfWork compartilhada por portas, idempotência durável, bloqueio de concorrência, movimentos imutáveis e outbox se houver consumidor. **Não considerar essa sugestão aprovada.**
 
@@ -115,8 +115,18 @@ Sugestão técnica submetida à decisão: transação única PostgreSQL ACID den
 - `docs/adr/ADR-006-agentes-autonomia-merge.md`, `docs/decisions/DECISION-LOG.md`, modelo SD, contrato de tarefa, runbook, Merge Guardian e integração com AGENTS/SDD-001/README, commit `8268e69debd77aeb633a640dd5175bf128523324`;
 - `scripts/validate_governance.py`, `tests/test_governance.py`, `.github/workflows/governance.yml`, template PR, commit `42cfc3d0a96866674b641384ca12e50bff324b14`; correção de regex por commit `33b33fbcd80b8d96eccfd4b71fe6094c25168a9c`.
 
-**PR encadeado:** `#2` aberto na branch documental `docs/sdd-fundacao-mt-sgi`, em **DRAFT**, ainda não integrado. O PR #1 continua DRAFT contra `main`; nenhum merge realizado. A presença de workflow no PR **não comprova execução**: checar runs e status do SHA antes de declarar CI validada.
+**PR consolidado:** `#2` foi redirecionado diretamente à `main` (inclui a fundação SDD inicial do PR #1 + todos os agentes/CI); **não integrado**. O PR #1 foi fechado como substituído, **sem merge**; nenhum merge realizado. O PR #4 foi criado para teste negativo, teve CI FAIL como esperado e foi fechado sem merge.
 
-**Restrição verificada:** `allow_auto_merge=false` na consulta de metadados GitHub, portanto o recurso de automerge ainda NÃO está habilitado. Configuração de branch protection/ruleset e reviewer independente ainda não está demonstrada: Merge Guardian em **BLOQUEADO PARA MERGE**, sem bypass. Não utilizar `merge_pull_request` como atalho.
+**Restrição verificada:** `allow_auto_merge=false`, `main.protected=false` e `main.protection.enabled=false` no GitHub; GET /rulesets retornou lista vazia e GET detalhado de branch protection resultou **403 por limitação da integração**. Merge Guardian em **BLOQUEADO PARA MERGE**. Issue administrativa [#3](https://github.com/magnnwsb2/mt-sgi/issues/3) contém instruções de configuração única na UI. Não usar `merge_pull_request` como atalho.
 
 **Próximas atividades seguras e autorizadas:** conferir CI estrutural em PR #2; corrigir falhas comprovadas; inspecionar se há regras nativas; documentar o ajuste administrativo necessário se a conexão não puder fazê-lo; testar cenário negativo no validador; atualizar este status com links dos jobs. Com proteção remota confirmada e requisitos aceitos, um PR poderá receber automerge. A discussão da ADR-002 permanece pendente para qualquer lógica de checkout.
+
+## 9. Evidências verificadas — CI positiva e negativa
+
+**Execução positiva:** [GitHub Actions run 42546296223](https://github.com/magnnwsb2/mt-sgi/actions/runs/42546296223) no PR #2 direcionado a `main`, commit `c460d6066fd345359bde8c5bd7704ec19846b54a`, estado COMPLETED e conclusão SUCCESS. A execução imediatamente anterior [42546022222](https://github.com/magnnwsb2/mt-sgi/actions/runs/42546022222) comprovou explicitamente nos logs: `MT SGI GOVERNANCE: PASS — 15 perfis` e **14 testes em Python passando** (`Ran 14 tests`, `OK`). A execução posterior confirma o gate contra `main`; verificar logs específicos da nova execução em caso de dúvida. Um run cancelado no meio de atualização de PR não é sucesso e não substitui o run subsequente aprovado.
+
+**Execução negativa deliberada:** branch isolada `test/governance-negative-proof`, commit de teste `23f659be280d1ba13ea02c41403d1ef0b0356e8a`, PR [#4](https://github.com/magnnwsb2/mt-sgi/pull/4). Uma seção obrigatória de `agents/qa-agent.md` foi propositalmente renomeada. [Run 42546520146](https://github.com/magnnwsb2/mt-sgi/actions/runs/42546520146) foi COMPLETED/FAILURE; erro literal: `Seção obrigatória ausente em agents/qa-agent.md: ## 6. Plano de implementação e critérios de aceite`. O PR #4 foi **fechado sem merge**, e a ref da branch de teste foi devolvida ao commit válido da feature por force-with-lease; a violação não foi integrada.
+
+**Conclusão estritamente limitada:** demonstrou-se que o gate determinístico aceita o estado documentado válido e rejeita a violação sintética. **Ainda não foi demonstrado** que a proteção remota impede um usuário admin de efetuar merge, que existe reviewer independente de identidade, ou que auto-merge está habilitado. Nenhuma dessas evidências pode ser inferida de um resultado PASS em Actions.
+
+**Bloqueio administrativo:** [Issue #3](https://github.com/magnnwsb2/mt-sgi/issues/3). Até a configuração da `main` ser concluída e confirmada, não fazer merge de #2 ou qualquer outra PR. A autorização mestra permanece válida para o trabalho operacional autorizado não bloqueado. SDD-002/003 e ADR-002 mantêm seus estados de proposta, sem implementação do domínio.
