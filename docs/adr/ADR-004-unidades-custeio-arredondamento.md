@@ -70,7 +70,7 @@
 ## 5. Recebimento, transferências, ajustes e devoluções
 
 - **Recebimento:** quantidade aceita converte para base; custo total de aquisição é fonte, não inferência de preço de venda. Frete/impostos/bonificação só entram se uma política futura decidir.
-- **Transferência:** preserva quantidade total e transfere valor patrimonial conforme o pool escolhido. Uma transferêcia entre locais não pode inventar CMV.
+- **Transferência:** preserva quantidade total e transfere valor patrimonial conforme o pool escolhido. Uma transferência entre locais não pode inventar CMV.
 - **Ajuste/inventário:** exige razão, autorização e lançamento compensatório auditável; custos de perdas/ganhos dependem de regra aprovada.
 - **Devolução de venda:** limite de quantidade e custo de reversão historicamente atribuídos à venda original, se aprovados pela ADR-002; mercadoria avariada não volta automaticamente ao disponível.
 - **Recebimento retroativo:** proibir reescrita silenciosa de saídas já fechadas. Definir correção contábil/reconciliação em ADR específica se necessário.
