@@ -40,3 +40,20 @@ GitHub Actions em runner gratuito elegível somente após confirmar limites atua
 - [ ] PR e commits rastreáveis;
 - [ ] STATUS atualizado;
 - [ ] Próximo trabalho identificado por dependência.
+
+## 7. Cobertura verificável do gate determinístico (Issue #5)
+
+A função `scripts/validate_governance.py` e a suíte `tests/test_governance.py` executam **offline**, apenas com a biblioteca padrão do Python. Para reproduzir no checkout do PR:
+
+```sh
+python3 scripts/validate_governance.py
+python3 -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+O gate verifica: presença e formato dos 15 perfis, consistência entre os caminhos do SDD-004, `agents/README.md` e o mapa de validação, documentos e seções obrigatórios, estados explícitos de decisões da baseline atual, alguns padrões fortes de segredos no conteúdo textual acessível e propriedades restritivas do próprio workflow (permissão de leitura, checkout preso a SHA, credenciais não persistidas, testes obrigatórios e ausência de `pull_request_target`).
+
+Os testes negativos usam **somente fixtures sintéticas** em diretórios temporários, cobrindo ausência/alteração de agentes, documento vazio/ausente, deriva de inventário/estados normativos, padrões fictícios de credenciais e alterações de YAML. Uma mudança autorizada de status de ADR/SDD exige atualização explícita e revisada da expectativa do validador; **não** remover o controle apenas para fazer o job passar.
+
+**Limites que permanecem:** busca por padrões não equivale a varredura abrangente de segredos, histórico completo de commits, PII semântica, supply chain/dependências, execução de aplicação comercial, análise estática geral, auditoria financeira, verificação de custo externo ou de licenciamento. O checkout padrão do workflow não busca o histórico inteiro; portanto **não há comprovação de que commits históricos foram inspecionados**. A análise retrospectiva de commits por Git offline é tecnicamente possível, mas não foi habilitada neste gate: ela exigiria buscar histórico adicional, definir escopo/volume, evitar imprimir valores sensíveis em logs e comprovar comportamento seguro com casos de teste antes de ativá-la. Nada disso é requisito para declarar os testes **estruturais** atuais como PASS; nenhum deles substitui os MG-001–011, revisão independente ou regras nativas da `main`.
+
+Verifique o **SHA do head e a conclusão do run do próprio SHA** a cada alteração. Um resultado verde de commit anterior não cobre commits novos. Histórico de implantação e casos negativos: [Issue #5](https://github.com/magnnwsb2/mt-sgi/issues/5); bloqueio administrativo independente: [Issue #3](https://github.com/magnnwsb2/mt-sgi/issues/3).
