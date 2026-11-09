@@ -7,6 +7,7 @@
 | Estado deste registro | **snapshot factual da preparação documental — revisar com GitHub antes de continuar** |
 | Repositório | https://github.com/magnnwsb2/mt-sgi |
 | Branch documental de trabalho | `docs/sdd-fundacao-mt-sgi` |
+| Pull Request de revisão | **#1 — https://github.com/magnnwsb2/mt-sgi/pull/1 (DRAFT, ABERTO, NÃO MESCLADO)** |
 | Branch de baseline | `main` — não pressupor que a documentação proposta já foi mesclada |
 | Release de software | **NENHUMA** |
 | Aplicação/API/DB/CI implementados | **NÃO** |
@@ -25,6 +26,7 @@
 - Foi criada a branch `docs/sdd-fundacao-mt-sgi` para apresentar documentação para revisão, **não** para implementar aplicação.
 - Nessa branch foram criados o SDD mestre, anexos de domínios/contratos e tecnologias/segurança/operação, ADR-001 adaptada à marca MT SGI, ADR-002 como proposta e AGENTS.md. O README inicial foi ampliado.
 - A proposta não introduz nenhuma API paga, hosting, checkout bancário real ou dados privados. **Nenhuma integração de execução foi testada, porque ainda não há código de aplicação.**
+- A documentação foi submetida no **PR #1 em estado DRAFT** para revisão. Seu conteúdo ainda não integra automaticamente `main`; o merge e aprovações de negócio são eventos distintos.
 
 ## 2. Registro das entregas documentais
 
