@@ -216,7 +216,7 @@ def validate_workflow_policy(root: Path) -> list[str]:
         errors.append("Workflow de governança contém permissão excessiva.")
     if not re.search(r"(?m)^permissions:\s*\n\s+contents:\s*read\s*$", workflow):
         errors.append("Workflow deve limitar permissões globais a contents: read.")
-    if re.search(r"(?m)^\s+permissions\s*:", workflow):
+    if re.search(r"(?m)^[ \t]+permissions[ \t]*:", workflow):
         errors.append("Workflow não pode sobrescrever permissões no job.")
     if not re.search(r"(?m)^\s+persist-credentials:\s*false\s*$", workflow):
         errors.append("Checkout deve desabilitar persistência de credenciais.")
