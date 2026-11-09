@@ -30,3 +30,9 @@ Criar uma SD usando `docs/decisions/requests/SD-TEMPLATE.md`. Informar risco, es
 ## Limites do registro
 
 A autorização mestra permite fazer commits, branches, PRs, testes, documentação e tarefas dentro da especificação; **não autoriza** desabilitar proteção, fazer merge não verificável, alterar custo zero ou codificar ADR-002 pendente.
+
+## Ratificação expressa da autorização — 09/11/2026
+
+Em instrução expressa de **09/11/2026**, o responsável reafirmou a autorização mestra para a implementação operacional do MT SGI no ambiente **ChatGPT + GitHub**, com autonomia A0/A1/A2 e A3 estritamente condicionado às proteções reais, sem necessidade de nova aprovação para cada tarefa, correção, commit ou PR. Os limites de custo **R$ 0**, dados sintéticos, decisões D1 pendentes, segurança fail-closed e ausência de execução permanente fora da sessão permanecem inalterados.
+
+As entradas GOV-DEC-001 a GOV-DEC-010 registram historicamente **08/11/2026**, conforme a documentação original. Esta ratificação em 09/11 não altera retroativamente datas anteriores, não aprova ADR-002/003/004/005 nem a baseline de tecnologia/negócio e não substitui revisão independente no GitHub.
