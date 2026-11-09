@@ -3,7 +3,7 @@
 | Campo | Valor |
 |---|---|
 | Produto | MT SGI — MT Sistema de Gestão Integrada |
-| Atualizado | 2026-11-08 (America/Fortaleza) |
+| Atualizado | 2026-11-09 (America/Fortaleza), auditoria de continuidade |
 | Estado deste registro | **snapshot da governança de agentes em implementação — conferir CI/PRs em tempo real** |
 | Repositório | https://github.com/magnnwsb2/mt-sgi |
 | Branch documental de trabalho | `docs/sdd-fundacao-mt-sgi` (PR #1, base de proposta) |
@@ -12,14 +12,15 @@
 | Pull Request documental anterior | **#1 — https://github.com/magnnwsb2/mt-sgi/pull/1 (FECHADO COMO SUBSTITUÍDO, SEM MERGE)** |
 | Branch de baseline | `main` — não pressupor que a documentação proposta já foi mesclada |
 | Release de software | **NENHUMA** |
-| Aplicação/API/DB/CI implementados | **NÃO** |
+| Aplicação comercial / API / banco implementados | **NÃO** |
+| CI de governança | **IMPLEMENTADA NA BRANCH E VALIDADA EM SHA ANTERIOR**; não representa CI do produto ou proteção da `main` |
 | Baseline SDD global aprovada | **NÃO**; documentos em proposta de revisão |
 | ADR-001 | **ACEITA**, decisão arquitetural previamente aprovada |
 | ADR-002 | **PROPOSTA**, aguardando escolha expressa |
 | SDD-004 / ADR-006 | **APROVADAS PARA GOVERNANÇA** (não para regras de negócio) |
 | Agentes versionados | **15 arquivos em agents/** na branch de feature; não são executores persistentes |
-| Gate de governança | **CI VALIDADA NO PR #2**: 14 testes PASS; run https://github.com/magnnwsb2/mt-sgi/actions/runs/42546296223 |
-| GitHub auto-merge | **DESABILITADO** (allow_auto_merge=false); main `protected=false`; impedimento Issue #3 |
+| Gate de governança | **ÚLTIMO RUN CONFERIDO**: 14 testes PASS em `ce2d3237cb7e8a77c102c78c507e564339952e9a` — https://github.com/magnnwsb2/mt-sgi/actions/runs/42572182538; **reavaliar após qualquer novo commit** |
+| GitHub proteção / auto-merge | **DESABILITADOS**: main `protected=false`, rulesets `[]`, `allow_auto_merge=false`; impedimento Issue #3 |
 
 > Este arquivo registra **fatos verificáveis**, mas não transforma proposta em aprovação. Antes de agir, comparar com PRs, commits, árvore e workflows atuais no GitHub. Se estiver desatualizado, corrigir o status em PR sem reescrever retroativamente o histórico.
 
@@ -73,7 +74,7 @@ Esses SHAs identificam **commits iniciais de cada arquivo** na branch, não SHA 
 
 ## 4. O que NÃO foi feito
 
-**Não** foram criados nem validados: `backend/`, `apps/`, `packages/`, banco PostgreSQL, migrations, containers, Docker Compose, autenticação, PDV, API, relatórios, pagamentos simulados, teste de concorrência, dashboard, deploy, hospedagem. **Exceção documental/CI:** workflow GitHub Actions de governança, validador Python e testes de governança já foram adicionados na branch de agentes, ainda sujeitos a execução e checagem dos jobs. A documentação descreve o que construir e como verificar, **não demonstra implementação**.
+**Não** foram criados nem validados: `backend/`, `apps/`, `packages/`, banco PostgreSQL, migrations, containers, Docker Compose, autenticação, PDV, API, relatórios, pagamentos simulados, teste de concorrência, dashboard, deploy, hospedagem. **Exceção documental/CI:** workflow GitHub Actions de governança, validador Python e testes de governança já foram adicionados na branch de agentes. Há execução positiva verificada (ver §11); cada novo SHA requer novamente checagem dos jobs. A documentação descreve o que construir e como verificar, **não demonstra implementação**.
 
 **Não existe** evidência de que as skills privadas `spec-driven-development` ou `pre-commit-security` foram instaladas ou executadas no GitHub público; diretrizes equivalentes são propostas para a futura CI.
 
@@ -140,3 +141,15 @@ Sugestão técnica submetida à decisão: transação única PostgreSQL ACID den
 - CI: os 14 testes PASS e o teste negativo documentados são evidências históricas; **não foram reexecutados nem validados para o commit de remoção nesta sessão**. Checks do novo head: NÃO VERIFICADOS.
 - Decisões: ADR-001 e ADR-006 aceitas; SDD-004 aprovado apenas para governança; ADR-002 proposta; ADR-003/004/005 e baseline global pendentes. Nenhum módulo comercial implementado nesta retomada.
 - Próxima ação: conferir execução de CI no novo SHA, revisar diff do PR #2 e aplicar controles de proteção/required checks da `main` antes de qualquer merge. Custo adicional observado nesta tarefa: R$ 0.
+
+## 11. Auditoria complementar — 09/11/2026: revisão integral do PR e CI
+
+- A consulta GitHub ao PR #2 confirmou: estado `open`, não draft, base `main`, head inicial desta auditoria `ce2d3237cb7e8a77c102c78c507e564339952e9a`, branch `feat/agent-governance-foundation`. A baseline `main` permaneceu em `880a677ee7e635f33c10161c35bb8a0d0be30e16`, sem merge.
+- Árvore daquele commit: 49 entradas incluindo diretórios; exatamente **15 arquivos de papel canônicos** em `agents/`, sem arquivos extras de papel. PR consolidado: **36 arquivos alterados**, documentos, testes e CI de governança; nenhum backend ou fluxo comercial implementado.
+- [Execução GitHub Actions #42572182538](https://github.com/magnnwsb2/mt-sgi/actions/runs/42572182538): `governance-validation` **COMPLETED/SUCCESS** no SHA `ce2d3237cb7e8a77c102c78c507e564339952e9a`; logs inspecionados: **Python 3.14.4**, `MT SGI GOVERNANCE: PASS — 15 perfis`, `Ran 14 tests` e `OK`. Não extrapolar para commits posteriores, testes de aplicativo, scanner integral de segredos ou proteção nativa.
+- História do PR: PR #1 fechado sem merge (substituído), PR #4 negativo fechado sem merge; somente PR #2 continua aberto. [Run negativo #42546520146](https://github.com/magnnwsb2/mt-sgi/actions/runs/42546520146) documenta falha sintética deliberada; isso não demonstra bloqueio remoto da `main`.
+- Repositório: `allow_auto_merge=false`; branch `main` retorna `protected=false` e required checks desativados; GET /rulesets retornou `[]`. Reviews formais do PR #2: **nenhuma**. **Merge Guardian BLOQUEADO** independentemente do PASS em CI. Issue #3 acompanha configuração administrativa.
+- Revisão documental detectou referências obsoletas à inexistência de CI e ao estado do PR #1. Correções não decisórias foram registradas nos commits `a88c640291d21fd58156662736719ceac16609fc` (README) e `05c992aacc03bbe7fdfa898b78e08516e9a8113a` (governança), preservando aprovações e contratos.
+- Auditoria de segurança: gate usa `actions/checkout` fixado a SHA, `contents: read`, validação offline padrão Python e fixtures sintéticas. O validador confere apenas estrutura e **padrões específicos de segredos**, não histórico completo, dependências futuras ou revisão humana; isso permanece risco residual e não pode ser classificado como scanner abrangente.
+- Decisões: ADR-001/006 aceitas e SDD-004 aprovado apenas para governança; ADR-002 proposta, ADR-003/004/005 pendentes, SDD-001/002/003 e stack ainda sem aceite global. Não há autorização para codificar regras comerciais dependentes.
+- Próxima atividade operacional: verificar CI e diff **no head mais recente**, emitir parecer MG-001–011 vinculado ao SHA; exigir configuração real da proteção `main` e auto-merge (Issue #3) antes de qualquer integração. Continuidade documental e testes determinísticos podem prosseguir sem custos e sem nova decisão de negócio.
