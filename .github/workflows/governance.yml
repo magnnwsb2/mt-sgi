@@ -1,0 +1,44 @@
+name: MT SGI - Governance Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mt-sgi-governance-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  governance-validation:
+    name: governance-validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact event revision
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Show Python runtime and commit
+        run: |
+          python3 --version
+          git rev-parse HEAD
+
+      - name: Validate SDD and agent governance
+        run: python3 scripts/validate_governance.py
+
+      - name: Run regression tests (offline, stdlib only)
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+
+      - name: Explain scope of this gate
+        if: always()
+        run: |
+          echo "This gate checks governance structure and selected secret patterns."
+          echo "It does NOT confirm GitHub branch protection, independent review,"
+          echo "application correctness, all secrets, or auto-merge configuration."
