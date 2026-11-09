@@ -4,9 +4,11 @@
 |---|---|
 | Produto | MT SGI — MT Sistema de Gestão Integrada |
 | Atualizado | 2026-11-08 (America/Fortaleza) |
-| Estado deste registro | **snapshot factual da preparação documental — revisar com GitHub antes de continuar** |
+| Estado deste registro | **snapshot da governança de agentes em implementação — conferir CI/PRs em tempo real** |
 | Repositório | https://github.com/magnnwsb2/mt-sgi |
-| Branch documental de trabalho | `docs/sdd-fundacao-mt-sgi` |
+| Branch documental de trabalho | `docs/sdd-fundacao-mt-sgi` (PR #1, base de proposta) |
+| Branch dos agentes | `feat/agent-governance-foundation` (derivada da branch documental) |
+| Pull Request dos agentes | **#2 — https://github.com/magnnwsb2/mt-sgi/pull/2 (DRAFT, base documental, NÃO MESCLADO)** |
 | Pull Request de revisão | **#1 — https://github.com/magnnwsb2/mt-sgi/pull/1 (DRAFT, ABERTO, NÃO MESCLADO)** |
 | Branch de baseline | `main` — não pressupor que a documentação proposta já foi mesclada |
 | Release de software | **NENHUMA** |
@@ -14,6 +16,10 @@
 | Baseline SDD global aprovada | **NÃO**; documentos em proposta de revisão |
 | ADR-001 | **ACEITA**, decisão arquitetural previamente aprovada |
 | ADR-002 | **PROPOSTA**, aguardando escolha expressa |
+| SDD-004 / ADR-006 | **APROVADAS PARA GOVERNANÇA** (não para regras de negócio) |
+| Agentes versionados | **15 arquivos em agents/** na branch de feature; não são executores persistentes |
+| Gate de governança | **WORKFLOW E TESTES CODIFICADOS** na branch; resultados reais precisam de confirmação |
+| GitHub auto-merge | **DESABILITADO** no metadado do repositório consultado (allow_auto_merge=false) |
 
 > Este arquivo registra **fatos verificáveis**, mas não transforma proposta em aprovação. Antes de agir, comparar com PRs, commits, árvore e workflows atuais no GitHub. Se estiver desatualizado, corrigir o status em PR sem reescrever retroativamente o histórico.
 
@@ -67,7 +73,7 @@ Esses SHAs identificam **commits iniciais de cada arquivo** na branch, não SHA 
 
 ## 4. O que NÃO foi feito
 
-**Não** foram criados nem validados: `backend/`, `apps/`, `packages/`, banco PostgreSQL, migrations, containers, Docker Compose, autenticação, PDV, API, relatórios, pagamentos simulados, teste de concorrência, dashboard, GitHub Actions, deploy, hospedagem. A documentação descreve o que construir e como verificar, **não demonstra implementação**.
+**Não** foram criados nem validados: `backend/`, `apps/`, `packages/`, banco PostgreSQL, migrations, containers, Docker Compose, autenticação, PDV, API, relatórios, pagamentos simulados, teste de concorrência, dashboard, deploy, hospedagem. **Exceção documental/CI:** workflow GitHub Actions de governança, validador Python e testes de governança já foram adicionados na branch de agentes, ainda sujeitos a execução e checagem dos jobs. A documentação descreve o que construir e como verificar, **não demonstra implementação**.
 
 **Não existe** evidência de que as skills privadas `spec-driven-development` ou `pre-commit-security` foram instaladas ou executadas no GitHub público; diretrizes equivalentes são propostas para a futura CI.
 
@@ -81,7 +87,7 @@ Esses SHAs identificam **commits iniciais de cada arquivo** na branch, não SHA 
 
 ## 6. Próxima ação segura — UM PASSO POR VEZ
 
-**Próxima ação:** revisão da fundação documental e **deliberação da ADR-002** com o responsável, sem implementação de vendas/estoque/caixa.
+**Próxima ação imediata:** verificar os jobs e resultados do PR #2, corrigir falhas de governança, verificar configurações reais da main e registrar impedimentos para automerge. **Próxima decisão de negócio depois da fundação:** deliberar ADR-002 sem implementar vendas/estoque/caixa antecipadamente.
 
 Sugestão técnica submetida à decisão: transação única PostgreSQL ACID dentro do monólito modular, com UnitOfWork compartilhada por portas, idempotência durável, bloqueio de concorrência, movimentos imutáveis e outbox se houver consumidor. **Não considerar essa sugestão aprovada.**
 
@@ -98,3 +104,19 @@ Sugestão técnica submetida à decisão: transação única PostgreSQL ACID den
 7. Encerrar com novos commits/PRs, evidências de validação e próxima ação neste arquivo.
 
 **Comando de retomada:** “No GitHub magnnwsb2/mt-sgi, leia primeiro AGENTS.md, SDD-001, SDD-002, SDD-003 e SDD-STATUS, depois ADR-001/002. Verifique branch/PR/CI; mantenha o SDD como fonte de verdade, o custo R$ 0 e siga a próxima etapa aprovada.”
+
+## 8. Marco GOV — autorização mestra, agentes e integração (08/11/2026)
+
+**Autorizações expressas, documentadas em SDD-004/ADR-006/Decision Log:** 15 perfis (oito domínios, seis transversais e Merge Guardian), opção C (ChatGPT conectado ao GitHub), execução operacional autônoma **durante a sessão** até limites e bloqueios, decisões híbridas, três correções por causa, branches isoladas e merge automatizado **apenas após verificação de CI, proteção nativa e revisão independente**. Não foi aprovada a ADR-002.
+
+**Artefatos adicionados à branch `feat/agent-governance-foundation`:**
+- `docs/specs/SDD-004-agentes-autonomia.md`, commit `55ed65a20e013d0a68c2c1887d42fc0e4db88a90`, formaliza a governança operacional aprovada;
+- **15 arquivos `agents/*.md`**, commit `c6b252a3df29d625e1272a7c8146ba5782485636`, especializados por contexto;
+- `docs/adr/ADR-006-agentes-autonomia-merge.md`, `docs/decisions/DECISION-LOG.md`, modelo SD, contrato de tarefa, runbook, Merge Guardian e integração com AGENTS/SDD-001/README, commit `8268e69debd77aeb633a640dd5175bf128523324`;
+- `scripts/validate_governance.py`, `tests/test_governance.py`, `.github/workflows/governance.yml`, template PR, commit `42cfc3d0a96866674b641384ca12e50bff324b14`; correção de regex por commit `33b33fbcd80b8d96eccfd4b71fe6094c25168a9c`.
+
+**PR encadeado:** `#2` aberto na branch documental `docs/sdd-fundacao-mt-sgi`, em **DRAFT**, ainda não integrado. O PR #1 continua DRAFT contra `main`; nenhum merge realizado. A presença de workflow no PR **não comprova execução**: checar runs e status do SHA antes de declarar CI validada.
+
+**Restrição verificada:** `allow_auto_merge=false` na consulta de metadados GitHub, portanto o recurso de automerge ainda NÃO está habilitado. Configuração de branch protection/ruleset e reviewer independente ainda não está demonstrada: Merge Guardian em **BLOQUEADO PARA MERGE**, sem bypass. Não utilizar `merge_pull_request` como atalho.
+
+**Próximas atividades seguras e autorizadas:** conferir CI estrutural em PR #2; corrigir falhas comprovadas; inspecionar se há regras nativas; documentar o ajuste administrativo necessário se a conexão não puder fazê-lo; testar cenário negativo no validador; atualizar este status com links dos jobs. Com proteção remota confirmada e requisitos aceitos, um PR poderá receber automerge. A discussão da ADR-002 permanece pendente para qualquer lógica de checkout.
