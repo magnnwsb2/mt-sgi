@@ -36,3 +36,11 @@ A autorização mestra permite fazer commits, branches, PRs, testes, documentaç
 Em instrução expressa de **09/11/2026**, o responsável reafirmou a autorização mestra para a implementação operacional do MT SGI no ambiente **ChatGPT + GitHub**, com autonomia A0/A1/A2 e A3 estritamente condicionado às proteções reais, sem necessidade de nova aprovação para cada tarefa, correção, commit ou PR. Os limites de custo **R$ 0**, dados sintéticos, decisões D1 pendentes, segurança fail-closed e ausência de execução permanente fora da sessão permanecem inalterados.
 
 As entradas GOV-DEC-001 a GOV-DEC-010 registram historicamente **08/11/2026**, conforme a documentação original. Esta ratificação em 09/11 não altera retroativamente datas anteriores, não aprova ADR-002/003/004/005 nem a baseline de tecnologia/negócio e não substitui revisão independente no GitHub.
+
+## Autorização específica de endurecimento de autonomia — 11/11/2026
+
+**GOV-DEC-011 — APROVADA, escopo restrito e positivo:** em 11/11/2026 o responsável solicitou expressamente que os princípios centrais do projeto constassem do SDD para não depender de histórico de chat e que fosse implementada a conformidade de operação autônoma. A autorização permite **persistir e fortalecer** as garantias AUT-001..012 (SDD-001 §16) e os níveis N0..N4 e as evidências de segurança (SDD-004 §14), corrigir o despachante e adicionar testes/CI **somente de leitura**. Esta entrada registra o teor e o escopo autorizado, **não constitui assinatura criptográfica** nem revisor externo GitHub.
+
+**Limites preservados:** não autoriza criar token com escrita, instalação de agente externo, execução permanente de LLM, contornar proteção da `main`, habilitar merge à força, alterar status de ADR-002/003/004/005, implementar regras comerciais, contratar serviços ou pagar. O despacho `PLAN_ONLY`/`AUDIT_ONLY` não é uma aprovação nem prova de proteção remota. Qualquer novo executor que escreva requer validação por operação, revisão e regras nativas comprovadas; até lá N3/N4 **BLOQUEADOS** conforme Issue #3.
+
+**Documentos e evidências:** SDD-001 §16; SDD-004 §14; `AGENTS.md` §8; `docs/agents/SAFE-DISPATCHER.md`; `docs/agents/TASK-CONTRACT.md`; PR #7 ([GitHub](https://github.com/magnnwsb2/mt-sgi/pull/7)). Testes e SHA corrente devem ser verificados no GitHub; a autorização não declara automaticamente os checks como PASS.
