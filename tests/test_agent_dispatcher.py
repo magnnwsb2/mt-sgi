@@ -1,10 +1,11 @@
 """Testes offline de despacho seguro; sem credenciais, rede ou efeitos."""
 from __future__ import annotations
 
-import copy
 import unittest
 
-from scripts.agent_dispatcher import AGENT_IDS, evaluate
+from pathlib import Path
+import tempfile
+from scripts.agent_dispatcher import AGENT_IDS, evaluate, _no_duplicate_keys
 
 
 def valid_contract():
@@ -23,7 +24,7 @@ def valid_contract():
         "pending_decisions": [],
         "allowed_paths": ["docs/"],
         "blocked_paths": ["backend/", ".github/"],
-        "preconditions": ["VERIFICADAS"],
+        "preconditions": ["GOVERNANCE_REPO_VALID"],
         "dependencies": [],
         "interfaces": ["Parecer JSON"],
         "acceptance_criteria": ["Nenhum efeito externo"],
@@ -59,6 +60,70 @@ class DispatcherTests(unittest.TestCase):
         c = valid_contract()
         c["preconditions"] = ["verificar depois"]
         self.assertEqual(evaluate(c)["decision"], "BLOCKED")
+
+    def test_self_attestation_verificadas_is_rejected(self):
+        c = valid_contract()
+        c["preconditions"] = ["VERIFICADAS"]
+        self.assertEqual(evaluate(c)["decision"], "BLOCKED")
+
+    def test_forged_adrs_are_blocked(self):
+        for adrs in (["ADR-002"], ["ADR-003"], ["ADR-001", "ADR-005"], ["ADR-999"]):
+            with self.subTest(adrs=adrs):
+                c = valid_contract()
+                c["accepted_adrs"] = adrs
+                self.assertEqual(evaluate(c)["decision"], "BLOCKED")
+
+    def test_forged_business_scope_is_blocked(self):
+        c = valid_contract()
+        c["requirements"] = ["FUN-006"]
+        self.assertEqual(evaluate(c)["decision"], "BLOCKED")
+
+    def test_local_governance_is_verified_independently(self):
+        c = valid_contract()
+        with tempfile.TemporaryDirectory() as d:
+            result = evaluate(c, root=Path(d))
+        self.assertEqual(result["decision"], "BLOCKED")
+        self.assertEqual(result["evidence"]["governance"], "FAIL")
+
+    def test_governance_audit_is_real_read_only_operation(self):
+        c = valid_contract()
+        c["owner_agent"] = "AGT-002"
+        c["requested_action"] = "inspect_governance"
+        result = evaluate(c)
+        self.assertEqual(result["decision"], "AUDIT_ONLY", result)
+        self.assertEqual(result["evidence"]["governance"], "PASS")
+        self.assertEqual(result["evidence"]["remote_head"], "NOT_VERIFIED")
+        self.assertEqual(result["evidence"]["write_authorization"], "DENIED")
+        self.assertEqual(result["effects"], [])
+
+    def test_domain_role_cannot_audit_governance(self):
+        c = valid_contract()
+        c["owner_agent"] = "AGT-007"
+        c["requested_action"] = "inspect_governance"
+        self.assertEqual(evaluate(c)["decision"], "BLOCKED")
+
+    def test_nested_path_overlap_blocks(self):
+        c = valid_contract()
+        c["blocked_paths"] = ["docs/specs/"]
+        self.assertEqual(evaluate(c)["decision"], "BLOCKED")
+
+    def test_unknown_fields_and_duplicate_json_keys_block(self):
+        c = valid_contract()
+        c["remote_approved"] = True
+        self.assertEqual(evaluate(c)["decision"], "BLOCKED")
+        with self.assertRaises(ValueError):
+            _no_duplicate_keys([("state", "PROPOSTA"), ("state", "EM_EXECUCAO")])
+
+    def test_malformed_task_lists_block(self):
+        for field, value in (
+            ("requirements", "GOV-001"), ("accepted_adrs", "ADR-001"),
+            ("interfaces", [None]), ("acceptance_criteria", [""]),
+            ("test_plan", [{"status": "NAO_EXECUTADO"}]),
+        ):
+            with self.subTest(field=field):
+                c = valid_contract()
+                c[field] = value
+                self.assertEqual(evaluate(c)["decision"], "BLOCKED")
 
     def test_non_zero_cost_blocks(self):
         c = valid_contract()
