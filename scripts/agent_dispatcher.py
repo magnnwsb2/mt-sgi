@@ -50,22 +50,22 @@ def evaluate(task: Any) -> dict[str, Any]:
     if missing:
         reasons.append("Campos obrigatórios ausentes: " + ", ".join(missing))
     agent = task.get("owner_agent")
-    if agent not in AGENT_IDS:
+    if not isinstance(agent, str) or agent not in AGENT_IDS:
         reasons.append("Agente proprietário não registrado.")
     secondary = task.get("secondary_agents")
-    if not isinstance(secondary, list) or any(a not in AGENT_IDS for a in secondary):
+    if not isinstance(secondary, list) or any(not isinstance(a, str) or a not in AGENT_IDS for a in secondary):
         reasons.append("Agentes secundários inválidos.")
     if not isinstance(task.get("task_id"), str) or not TASK_ID.fullmatch(task["task_id"]):
         reasons.append("ID de tarefa inválido.")
     if task.get("repo") != "magnnwsb2/mt-sgi":
         reasons.append("Repositório fora do escopo.")
-    if task.get("state") not in STATES:
+    if not isinstance(task.get("state"), str) or task["state"] not in STATES:
         reasons.append("Estado de tarefa inválido.")
     if task.get("state") != "EM_EXECUCAO":
         reasons.append("Tarefa não está EM_EXECUCAO.")
     if not isinstance(task.get("baseline_sha"), str) or not SHA.fullmatch(task["baseline_sha"]):
         reasons.append("SHA de baseline inválido ou ausente.")
-    if task.get("baseline_branch") not in {"main", "feat/agent-governance-foundation"}:
+    if not isinstance(task.get("baseline_branch"), str) or task["baseline_branch"] not in {"main", "feat/agent-governance-foundation"}:
         reasons.append("Baseline não reconhecida.")
     work_branch = task.get("work_branch")
     if not isinstance(work_branch, str) or not work_branch or work_branch in {"main", "master"}:
@@ -85,7 +85,7 @@ def evaluate(task: Any) -> dict[str, Any]:
     action = task.get("requested_action")
     if action != "plan_only":
         reasons.append("Somente a ação plan_only é permitida nesta fase.")
-    if action in DANGEROUS_ACTIONS:
+    if isinstance(action, str) and action in DANGEROUS_ACTIONS:
         reasons.append("Ação com efeitos externos explicitamente proibida.")
     for key in ("title", "requirements", "accepted_adrs", "interfaces", "acceptance_criteria", "test_plan", "risk", "rollback"):
         value = task.get(key)
@@ -100,7 +100,7 @@ def evaluate(task: Any) -> dict[str, Any]:
                 break
     return {
         "decision": "PLAN_ONLY" if not reasons else "BLOCKED",
-        "agent": agent if agent in AGENT_IDS else None,
+        "agent": agent if isinstance(agent, str) and agent in AGENT_IDS else None,
         "task_id": task.get("task_id") if isinstance(task.get("task_id"), str) else None,
         "reasons": reasons,
         "effects": [],
