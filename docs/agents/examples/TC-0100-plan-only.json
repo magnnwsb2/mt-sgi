@@ -1,0 +1,52 @@
+{
+  "task_id": "TC-0100",
+  "state": "EM_EXECUCAO",
+  "title": "Planejar revisão documental de governança",
+  "owner_agent": "AGT-001",
+  "secondary_agents": [
+    "AGT-002",
+    "AGT-013"
+  ],
+  "repo": "magnnwsb2/mt-sgi",
+  "baseline_branch": "feat/agent-governance-foundation",
+  "baseline_sha": "14d2a10113b3a90cfc92ef57748518a15ead9463",
+  "work_branch": "feat/agent-safe-dispatcher",
+  "requirements": [
+    "GOV-001"
+  ],
+  "accepted_adrs": [
+    "ADR-001",
+    "ADR-006"
+  ],
+  "pending_decisions": [],
+  "allowed_paths": [
+    "docs/"
+  ],
+  "blocked_paths": [
+    "backend/",
+    ".github/"
+  ],
+  "preconditions": [
+    "VERIFICADAS"
+  ],
+  "dependencies": [],
+  "interfaces": [
+    "Parecer JSON, sem efeitos"
+  ],
+  "acceptance_criteria": [
+    "Nenhum efeito externo; sem aprovação de negócio"
+  ],
+  "test_plan": [
+    {
+      "id": "AT-001",
+      "method": "unittest offline",
+      "expected": "PLAN_ONLY e effects vazio",
+      "status": "NAO_EXECUTADO"
+    }
+  ],
+  "risk": "baixo — planejamento somente",
+  "rollback": "Reverter commit em PR antes do merge",
+  "cost_policy": "R$ 0 — sem serviços faturáveis",
+  "attempts_by_root_cause": {},
+  "requested_action": "plan_only"
+}
