@@ -137,3 +137,49 @@ A próxima etapa depois da governança depende das ADRs de negócio: especialmen
 ## 13. Rastreabilidade de aprovação
 
 Em 08/11/2026 o responsável aprovou: 15 agentes; autonomia operacional até bloqueio real; no máximo três tentativas; branches isoladas e paralelismo seguro; merges automatizados com agente de validação, condicionados à proteção da main e a checks; ChatGPT + GitHub (opção C) sem garantia de execução contínua fora da sessão; decisões híbridas agrupadas/críticas destacadas; e **autorização mestra para iniciar implementação**. A ADR-002 **não** foi aprovada na mesma conversa. A data de commit no GitHub pode ser 09/11/2026 UTC; isso não muda a data local da decisão.
+
+## 14. Contrato de conformidade operacional autônoma — 11/11/2026
+
+**Decisão expressa recebida:** persistir os princípios centrais para que o projeto seja recuperável sem a conversa original e reforçar a conformidade da operação dos agentes. O escopo é de **segurança, validação e governança**; não permite criar poderes administrativos, serviços contínuos de IA, custos ou implementar ADRs de produto não aprovadas. Consulte SDD-001 §16 (`AUT-001..012`).
+
+### 14.1 Níveis de capacidade, cada um com prova independente
+
+| Nível | Capacidade | Evidência exigida | Estado inicial do projeto |
+|---|---|---|---|
+| N0 | perfis e SDD versionados | inventário de 15 agentes, normas e links auditados | **documentado em PR, não mesclado na main** |
+| N1 | admissão, diagnóstico e auditoria local determinística | contrato estruturado, verificação do conteúdo do repositório, testes negativos, resultado sem efeito | **implementação em evolução no PR #7; avaliar último SHA** |
+| N2 | planejamento com referência a GitHub remoto | SHA real, PR/head/base, decisões e checks confirmados por consultas independentes do contrato | **NÃO COMPROVADO automaticamente pelo executor local** |
+| N3 | alteração isolada por executor automatizado | conta/identidade mínima, autorização por ação e path, revalidação antes da escrita, ambiente isolado, log e rollback | **NÃO AUTORIZAR ATÉ PROVAS DE CONTROLE** |
+| N4 | integração/merge automático | MG-001..011 PASS no mesmo SHA, proteção nativa, required checks e review independente | **BLOQUEADO por Issue #3** |
+
+**Nunca apresentar N1 como N3/N4.** Uma execução de GitHub Actions do validador mostra resultado do job, não prova autorização de escrever em GitHub, independência de revisão ou persistência de um agente IA.
+
+### 14.2 O que é considerado evidência confiável
+
+- **Contrato/fixture**: dados de entrada **não confiáveis**, mesmo quando contêm `VERIFICADAS`, `pending_decisions: []`, SHA de 40 caracteres, `accepted_adrs` ou menção a aprovação. Verificar estados/arquivos, não confiar em strings.
+- **Leitura local do checkout**: prova apenas a integridade/correspondência do material *que está sendo lido*, sob a confiança da origem do checkout. Não prova branch protection, revisão de outra identidade ou que o checkout corresponde ao último head remoto.
+- **Resposta GitHub por conector autorizado**: pode comprovar um fato remoto específico naquele instante (ex.: SHA ou status); não deve ser incorporada como alegação em JSON livre do solicitante.
+- **Decisão do responsável**: resposta inequívoca com escopo e data, persistida em Decision Log e ADR/SDD; não pode ser inventada por agente, comentador de PR ou ferramenta.
+- **Check do SHA**: somente `completed/success` do check obrigatório e do commit relevante; `missing`, `queued`, `neutral`, `skipped`, `cancelled` e resultados de outros SHAs **não são PASS**.
+- **Proteções nativas**: consultar no próprio GitHub, exigir efeito real (teste de bloqueio). Se leitura administrativa for negada ou regras não existirem, estado `UNKNOWN`/FAIL e merge BLOQUEADO.
+
+### 14.3 Restrições obrigatórias para qualquer executor futuro
+
+1. **Identidade restrita:** token exclusivamente para a ação necessária, escopo mínimo, nunca admin, nunca segredos em contrato/logs; GitHub Action PR de terceiros sem token de escrita.
+2. **Separação entre plano e efeito:** análise local não autoriza write; autorização exige verificação nova na fronteira de execução e não usa flags fornecidas pelo próprio agente.
+3. **Caminhos normalizados e protegidos:** impedir traversal, links simbólicos, sobreposição entre path permitido e proibido, `.git`, modificação de CI/política por meio do executor e qualquer gravação na `main`.
+4. **Escopo pequeno e reversível:** somente tarefas com requisitos/ADRs aplicáveis aceitos, contrato de tarefa, orçamento de tentativas, critérios de aceite e rollback demonstrável.
+5. **Fail-closed:** validação indisponível, desatualizada, ambígua, dependência pendente, impossibilidade de provar proteção remota ou secret scan insuficiente bloqueiam o **efeito afetado**.
+6. **Sem execução de comandos ou código vindos do contrato**, sem chamada de rede, pagamento, deploy ou operação fiscal sem novo desenho aprovado e segurança apropriada.
+7. **TOCTOU:** revalidar head SHA, ACL/rulesets/reviews/checks e escopo imediatamente antes de operação com efeitos; invalidar autorização ao mudar qualquer dependência.
+8. **Isolamento de revisão:** não simular agente independente com o mesmo ator/autenticador; Merge Guardian não aprova sozinho o PR que criou.
+9. **Registro persistente:** outcome `PASS/FAIL/UNKNOWN/NOT_RUN` por controle, commit e URL exatos; eliminar qualquer segredo de logs.
+10. **Sem processo fantasma:** perfil Markdown e dispatcher offline não representam 15 trabalhadores autônomos, nem tarefas que continuam após fim do chat.
+
+### 14.4 Definição de "conformidade integral"
+
+- **Para operação autônoma *somente de leitura***: requisitos AUT-001..012 aplicáveis, verificador de artefatos em checkout, casos adversariais, saída sem efeito e evidência CI no SHA corrente; não declarar verificação remota que não ocorreu.
+- **Para operação autônoma *com escrita***: todos os itens N3 **e** controle remoto comprovado em runtime. Nenhuma aprovação desta seção substitui a exigência de regras nativas e revisão separada.
+- **Para merge**: todos MG-001..011 aprovados por evidências independentes. A conta administradora conectada não pode usar permissão de bypass.
+
+**Política em vigor:** reforço permitido pela autorização expressa de 11/11/2026. Nenhum outro capítulo, ADR ou regra comercial foi implicitamente aprovado; se futuro recurso requerer mudança na constituição de segurança, abrir SD com aceite específico.

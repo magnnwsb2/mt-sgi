@@ -36,6 +36,9 @@ jobs:
       - name: Run regression tests (offline, stdlib only)
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
 
+      - name: Execute read-only agent governance inspection
+        run: python3 scripts/agent_dispatcher.py docs/agents/examples/TC-0101-governance-audit.json
+
       - name: Explain scope of this gate
         if: always()
         run: |

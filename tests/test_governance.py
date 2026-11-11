@@ -102,6 +102,7 @@ class GovernanceTests(unittest.TestCase):
             ("    runs-on: ubuntu-latest", "    permissions:\n      contents: write\n    runs-on: ubuntu-latest"),
             ("python3 scripts/validate_governance.py", "echo skipped-validator"),
             ("python3 -m unittest", "echo skipped-tests"),
+            ("python3 scripts/agent_dispatcher.py docs/agents/examples/TC-0101-governance-audit.json", "echo skipped-audit"),
         )
         for before, after in mutations:
             with self.subTest(after=after):
@@ -167,6 +168,23 @@ class GovernanceTests(unittest.TestCase):
                     dest.parent.mkdir(parents=True, exist_ok=True)
                     dest.write_text(original.replace(old, new, 1), encoding="utf-8")
                     self.assertTrue(any(relative in e for e in validate_decision_states(root)))
+
+    def test_new_autonomy_artifacts_must_exist(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.assertTrue(any("scripts/agent_dispatcher.py" in e
+                                for e in validate_core_documents(root)))
+            self.assertTrue(any("TC-0101-governance-audit.json" in e
+                                for e in validate_core_documents(root)))
+
+    def test_governance_principles_are_versioned(self) -> None:
+        master = (ROOT / "docs/specs/SDD-001.md").read_text(encoding="utf-8")
+        agents = (ROOT / "docs/specs/SDD-004-agentes-autonomia.md").read_text(encoding="utf-8")
+        for number in range(1, 13):
+            self.assertIn(f"AUT-{number:03d}", master)
+        self.assertIn("## 14. Contrato de conformidade operacional autônoma", agents)
+        self.assertIn("N3", agents)
+        self.assertIn("N4", agents)
 
     def test_no_dependency_on_paid_services(self) -> None:
         doc = (ROOT / "docs/specs/SDD-004-agentes-autonomia.md").read_text(encoding="utf-8")

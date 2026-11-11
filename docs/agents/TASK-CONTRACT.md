@@ -67,3 +67,13 @@ O relatório final deve comparar intenção e realidade: estado da branch no Git
 ## 6. Exemplo simples de entrega
 
 Tarefa: GOV-001, cadastro de 15 perfis; proprietário AGT-001; caminhos `agents/*.md`; prova: validador que confere contagem e IDs únicos; PR documental. Não implica que cada perfil está rodando. Não escrever “agentes ativos” sem executor real.
+
+## 7. Contrato de admissibilidade para a auditoria local (AUT-001..012)
+
+**Não confundir campo declarado com evidência externa.** O esquema YAML de tarefa acima continua sendo a forma geral de acompanhamento, mas o despachante offline recebe uma projeção **JSON com `requested_action` obrigatório**. Apenas `plan_only` e `inspect_governance` são aceitos: a inspeção é exclusivamente local e não executa tarefa de domínio.
+
+O campo `preconditions` desse JSON recebe **`["GOVERNANCE_REPO_VALID"]`**, que é o nome de uma condição implementada no código: o despachante lê `SDD-001`, `SDD-004` e executa o validador estrutural real no checkout. O valor antigo `["VERIFICADAS"]` é **rejeitado**, pois não constitui prova. O contrato jamais pode fornecer um objeto `evidence` com `remote_head: VERIFIED` para conceder direitos: campos não reconhecidos são bloqueados. O resultado mostra `remote_head: NOT_VERIFIED` e `write_authorization: DENIED`.
+
+Somente os requisitos `GOV-001..012` entram nessa primeira camada; nenhuma ADR além de `ADR-001` e `ADR-006` pode ser alegada como aceita. Ações de alteração, pagamento, deploy, GitHub write, rede e merge não são operações aceitas por este executor. Um simples `PLAN_ONLY` ou `AUDIT_ONLY` **nunca** eleva privilégio ou autoriza `EM_REVISAO→CONCLUIDA`.
+
+**Exemplos versionados:** `docs/agents/examples/TC-0100-plan-only.json` e `docs/agents/examples/TC-0101-governance-audit.json`. A auditoria do segundo é executada automaticamente pelo CI de governança sem token de escrita, mas **não** verifica a procedência do head remoto nem políticas do repositório. Usar o GitHub conectado para obter essas evidências de forma independente se o plano evoluir para efeitos. Consultar SDD-001 §16, SDD-004 §14 e `docs/agents/SAFE-DISPATCHER.md`.
