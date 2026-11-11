@@ -27,7 +27,7 @@
     ".github/"
   ],
   "preconditions": [
-    "VERIFICADAS"
+    "GOVERNANCE_REPO_VALID"
   ],
   "dependencies": [],
   "interfaces": [
