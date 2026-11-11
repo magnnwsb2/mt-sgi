@@ -46,6 +46,11 @@ CORE_DOCUMENTS = (
     "docs/adr/ADR-006-agentes-autonomia-merge.md",
     "docs/agents/RUNBOOK.md",
     "docs/agents/TASK-CONTRACT.md",
+    "docs/agents/SAFE-DISPATCHER.md",
+    "docs/agents/examples/TC-0100-plan-only.json",
+    "docs/agents/examples/TC-0101-governance-audit.json",
+    "scripts/agent_dispatcher.py",
+    "tests/test_agent_dispatcher.py",
     "docs/operations/MERGE-GUARDIAN.md",
     "docs/decisions/DECISION-LOG.md",
     "docs/decisions/requests/SD-TEMPLATE.md",
@@ -263,6 +268,8 @@ def validate_workflow_policy(root: Path) -> list[str]:
         errors.append("Checkout deve usar SHA completo imutável.")
     if "scripts/validate_governance.py" not in workflow or "unittest" not in workflow:
         errors.append("Workflow não executa validador e testes de regressão.")
+    if "python3 scripts/agent_dispatcher.py docs/agents/examples/TC-0101-governance-audit.json" not in workflow:
+        errors.append("Workflow omite auditoria operacional de leitura (AUT).")
     return errors
 
 
