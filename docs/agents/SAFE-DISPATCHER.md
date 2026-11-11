@@ -1,10 +1,10 @@
-# MT SGI — Despachante seguro de tarefas (fase 1: somente planejamento)
+# MT SGI — Despachante seguro (fase N1: planejamento e auditoria local, sem escrita)
 
 | Campo | Estado |
 |---|---|
 | Mecanismo | `scripts/agent_dispatcher.py` |
 | Estado | **IMPLEMENTADO em branch/PR, não integrado à main** |
-| Escopo | validação de contrato JSON e emissão de parecer `PLAN_ONLY` ou `BLOCKED` |
+| Escopo | validação de contrato JSON e auditoria local governamental, com `PLAN_ONLY`, `AUDIT_ONLY` ou `BLOCKED` |
 | Executor LLM autônomo | **NÃO IMPLEMENTADO** |
 | Efeitos externos | **NENHUM**; não lê GitHub, não usa token, não cria branch/commit, não executa código de tarefas |
 | Aprovação de negócio | **NUNCA** inferida do resultado |
@@ -31,7 +31,7 @@ Para uma **operação efetiva de leitura automatizada** (sem escrita), execute:
 python3 scripts/agent_dispatcher.py docs/agents/examples/TC-0101-governance-audit.json
 ```
 
-Resultado esperado: `AUDIT_ONLY`, `governance: PASS` e `effects: []`. O GitHub Actions roda esta mesma inspeção em PRs; a resposta `remote_head: NOT_VERIFIED` significa que não foi feita consulta externa de proteção ou aprovação. Nenhum campo do contrato pode transformá-la em `VERIFIED`. Se alguma decisão estiver pendente, campo faltar, ação solicitada for diferente de `plan_only` ou contador de tentativas atingir 3, saída `BLOCKED` e código de retorno 2.
+Resultado esperado: `AUDIT_ONLY`, `governance: PASS` e `effects: []`. O GitHub Actions roda esta mesma inspeção em PRs; a resposta `remote_head: NOT_VERIFIED` significa que não foi feita consulta externa de proteção ou aprovação. Nenhum campo do contrato pode transformá-la em `VERIFIED`. Se houver decisão pendente, campo inválido, ação diferente de `plan_only` ou `inspect_governance`, papel sem permissão de auditoria ou contador de tentativas atingir 3, a saída é `BLOCKED` e o código de retorno é 2.
 
 ## 3. Fluxo de operação — humano/ChatGPT com GitHub conectado
 
@@ -48,7 +48,7 @@ Resultado esperado: `AUDIT_ONLY`, `governance: PASS` e `effects: []`. O GitHub A
 - **Fase 3, pendente:** executor que abra PRs isolados para mudanças de baixo risco, após aprovação específica de seu modelo de autorização. Proibido conceder push direto na `main`, acesso a secrets, alteração de proteção e merge próprio.
 - **Pré-requisito externo:** proteção real da `main` e revisão independente, conforme Issue #3. Sem isso, o Merge Guardian permanece BLOQUEADO.
 
-**Não chamar este despachante de "15 agentes trabalhando autonomamente": ele é o primeiro controle técnico de admissão, somente de leitura.**
+**Não chamar este despachante de "15 agentes de IA trabalhando autonomamente": ele executa somente verificações determinísticas locais e não confere direitos externos.**
 
 ## 5. Provas e bloqueios que não podem ser simulados
 
