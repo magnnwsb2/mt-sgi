@@ -166,3 +166,13 @@ Sugestão técnica submetida à decisão: transação única PostgreSQL ACID den
 - Cobertura, reprodução e limites registrados em `docs/agents/RUNBOOK.md` §7. O verificador inspeciona arquivos texto da árvore atual, não todo histórico Git, nem segredos em todas as formas, PII semântica, licenças/dependências futuras, política remota de GitHub ou revisão de terceiro.
 - **Integração:** PR #2 permanece sem merge. Issue #3 continua bloqueando: `main.protected=false`, required checks não configurados e `allow_auto_merge=false` na última consulta administrativa autorizada. Não afirmar que o gate verificou bloqueio remoto, nem tentar `merge_pull_request`.
 - **Próximo gate:** conferir o check do head final após os commits documentais; atualizar parecer MG com evidência do SHA final. A implementação de CI pode ser considerada validada na **branch de trabalho**, mas a entrega permanece pendente de integração protegida à `main`. Custo adicional R$ 0.
+
+## 13. Primeiro componente operacional dos agentes — 11/11/2026
+
+- [PR #7](https://github.com/magnnwsb2/mt-sgi/pull/7) aberto contra `feat/agent-governance-foundation` (PR #2), branch `feat/agent-safe-dispatcher`; **não integrado à main**.
+- Adicionado `scripts/agent_dispatcher.py`: gate determinístico **somente de leitura/planejamento**, que aceita contrato JSON sintético e retorna `PLAN_ONLY` ou `BLOCKED` com `effects: []`. **Não executa agente LLM, não cria commits, não faz rede, não altera GitHub e não aprova negócio**.
+- Criados testes adversariais `tests/test_agent_dispatcher.py`, documento `docs/agents/SAFE-DISPATCHER.md` e fixture `docs/agents/examples/TC-0100-plan-only.json`.
+- **Limitação essencial:** `preconditions: ["VERIFICADAS"]` é somente declaração do contrato; `PLAN_ONLY` **não comprova** revisão independente, decisões aceitas, proteção de branch ou autorização para escrita. Um executor real depende de projeto de segurança separado.
+- **Evidência CI do head:** PENDENTE DE CONSULTA. Não declarar testes PASS sem verificar logs/commit. O workflow existente de governança deve descobrir automaticamente o novo teste `test_agent_dispatcher.py` quando disparado para PR.
+- **Merge Guardian:** BLOQUEADO pela ausência de proteção nativa/required checks/review independente da `main` (Issue #3). PR #7 depende do PR #2, mas é independente do pacote de decisões comerciais do PR #6.
+- Próxima ação: verificar run CI no head de PR #7, corrigir problemas no máximo 3 tentativas por causa, registrar evidência e não mesclar sem gates nativos. Custo adicional R$ 0.
