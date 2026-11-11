@@ -35,7 +35,7 @@ def _paths_valid(values: Any) -> bool:
         return False
     return all(
         isinstance(v, str) and bool(PATH.fullmatch(v))
-        and v not in {".", ".."} and not v.startswith(".git")
+        and v not in {".", ".."} and not (v == ".git" or v.startswith(".git/"))
         and all(segment not in {".", ".."} for segment in v.split("/"))
         for v in values
     )
